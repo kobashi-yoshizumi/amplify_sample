@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AppSync API Configuration (New)
+
+Resources:
+  AppSyncGraphQLAPI:
+    Type: AWS::AppSync::GraphQLApi
+    Properties:
+      Name: NewAppSyncAPI
+      AuthenticationType: API_KEY
+
+  AppSyncAPIKey:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId: !Ref AppSyncGraphQLAPI
+      Description: "AppSync API Key"
+      Expires: 1893456000  # Unixタイムスタンプ (例: 2030-01-01)
+
+  AppSyncGraphQLSchema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId: !Ref AppSyncGraphQLAPI
+      Definition: |
+        type Query {
+          hello: String
+        }
+
+Outputs:
+  AppSyncApiId:
+    Description: The ID of the AppSync API
+    Value: !Ref AppSyncGraphQLAPI
+    Export:
+      Name: AppSyncApiId-New
+
+  AppSyncApiEndpoint:
+    Description: The endpoint of the AppSync API
+    Value: !GetAtt AppSyncGraphQLAPI.GraphQLUrl
+    Export:
+      Name: AppSyncApiEndpoint-New
+
+  AppSyncApiKey:
+    Description: The API Key for the AppSync API
+    Value: !Ref AppSyncAPIKey
+    Export:
+      Name: AppSyncApiKey-New
+

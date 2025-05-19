@@ -1,0 +1,47 @@
+version: 0.2
+
+env:
+  variables:
+    LAMBDA_BUCKET: deploytest-s3-kobashi
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+      nodejs: 18
+    commands:
+      - echo Installing...
+
+  build:
+    commands:
+      - echo Zipping Lambda functions...
+      - zip -r func_a.zip lambda/func_a
+      - aws s3 cp func_a.zip s3://$LAMBDA_BUCKET/lambda/func_a.zip
+
+
+      - echo Deploying Lambda Stack...
+      - |
+        aws cloudformation deploy \
+          --template-file cf_temp/lambda.yaml \
+          --stack-name LambdaFunctionsStack \
+          --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+          --parameter-overrides \
+            LambdaCodeBucket=$LAMBDA_BUCKET \
+            FuncAKey=lambda/func_a.zip \
+
+      - echo Removing existing Lambda URL permissions...
+      - |
+        aws lambda remove-permission \
+          --function-name func-a \
+          --statement-id public-access-func-a || true
+        
+
+      - echo Setting Lambda URL permissions for public access...
+      - |
+        aws lambda add-permission \
+          --function-name func-a \
+          --statement-id public-access-func-a \
+          --action lambda:InvokeFunctionUrl \
+          --principal '*' \
+          --function-url-auth-type NONE
+
