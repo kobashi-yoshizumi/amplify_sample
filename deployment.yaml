@@ -1,0 +1,6 @@
+# デプロイメントファイル (deployment.yaml)
+DeploymentName: MyS3BucketDeployment
+StackName: my-s3-bucket-stack
+TemplateFile: cf_temp/s3_bucket.yaml
+Parameters:
+  BucketName: kobashi-s3-bucket-name-1234
