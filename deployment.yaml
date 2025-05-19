@@ -1,10 +1,4 @@
 deployments:
-  - name: S3BucketDeployment
-    template-file-path: cf_temp/s3_bucket.yaml
-    parameters:
-      BucketName: kobashi-amplifyapp-s3-bucket-1
-    tags: {}
-
   - name: AmplifyDeployment
     template-file-path: cf_temp/amplify.yaml
     parameters:
