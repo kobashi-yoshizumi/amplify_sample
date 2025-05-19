@@ -1,0 +1,3 @@
+template-file-path: cf_temp/s3_bucket.yaml
+parameters: {}
+tags: {}
