@@ -6,3 +6,5 @@ deployments:
       BranchName: main
       GitHubRepo: https://github.com/kobashi-yoshizumi/amplify_sample
     tags: {}
+
+
