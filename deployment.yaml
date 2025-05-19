@@ -1,3 +1,14 @@
-template-file-path: cf_temp/s3_bucket.yaml
-parameters: {}
-tags: {}
+deployments:
+  - name: S3BucketDeployment
+    template-file-path: cf_temp/s3_bucket.yaml
+    parameters:
+      BucketName: kobashi-amplifyapp-s3-bucket
+    tags: {}
+
+  - name: AmplifyDeployment
+    template-file-path: cf_temp/amplify.yaml
+    parameters:
+      AppName: kobashi-sample-amplify
+      BranchName: main
+      GitHubRepo: https://github.com/kobashi-yoshizumi/amplify_sample
+    tags: {}

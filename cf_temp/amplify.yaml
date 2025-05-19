@@ -1,83 +1,53 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Amplify App with GitHub Integration (Git Sync)
+Description: Amplify Environment Creation via CloudFormation with Git Sync
 
 Parameters:
+  AppName:
+    Type: String
+    Description: The name of the Amplify application
+    Default: kobashi-sample-amplify
+
+  BranchName:
+    Type: String
+    Description: The branch to deploy
+    Default: main
+
   GitHubRepo:
     Type: String
-  GitHubBranch:
-    Type: String
-  GitHubOAuthToken:
-    Type: String
+    Description: The GitHub repository URL
+    Default: https://github.com/kobashi-yoshizumi/amplify_sample
 
 Resources:
   AmplifyApp:
     Type: AWS::Amplify::App
     Properties:
-      Name: amplifyapppat
-      Repository: !Sub "https://github.com/${GitHubRepo}"
-      OauthToken: !Ref GitHubOAuthToken
-      Platform: WEB
-      IAMServiceRole: arn:aws:iam::<your-account-id>:role/AmplifyServiceRole
-      EnvironmentVariables:
-        - Name: GITHUB_OAUTH_TOKEN
-          Value: !Ref GitHubOAuthToken
-      AutoBranchCreation:
-        Patterns:
-          - "*"
-        BasicAuthConfig:
-          EnableBasicAuth: false
-      BuildSpec: |
-        version: 1.0
-        applications:
-          - appRoot: /amplifyapp
+      Name: !Ref AppName
+      Repository: !Ref GitHubRepo
+      OAuthToken: "{{resolve:secretsmanager:amplifyapp:SecretString:MyGitHubToken}}"
+      AccessToken: "{{resolve:secretsmanager:amplifyapp:SecretString:MyGitHubAccessToken}}"
+      Branches:
+        - BranchName: !Ref BranchName
+          BasicAuthConfig:
+            EnableBasicAuth: false
+          BuildSpec: |
+            version: 1
             frontend:
               phases:
                 preBuild:
                   commands:
-                    - echo "Fetching parameters from SSM..."
-                    - APP_SYNC_URL=$(aws ssm get-parameter --name "AppSyncAPIURL" --region ap-northeast-1 --query "Parameter.Value" --output text)
-                    - USER_POOL_ID=$(aws ssm get-parameter --name "UserPoolId" --region ap-northeast-1 --query "Parameter.Value" --output text)
-                    - USER_POOL_CLIENT_ID=$(aws ssm get-parameter --name "UserPoolClientId" --region ap-northeast-1 --query "Parameter.Value" --output text)
-
-                    - echo "Creating amplifyConfig.ts from SSM values..."
-                    - |
-                      cat <<EOF > src/amplifyConfig.ts
-                      import { GraphQLAuthMode } from './amplifyAuthModes';
-
-                      const amplifyConfig = {
-                        Auth: {
-                          Cognito: {
-                            region: "ap-northeast-1",
-                            userPoolId: "$USER_POOL_ID",
-                            userPoolClientId: "$USER_POOL_CLIENT_ID",
-                          },
-                        },
-                        API: {
-                          GraphQL: {
-                            endpoint: "$APP_SYNC_URL",
-                            region: "ap-northeast-1",
-                            defaultAuthMode: GraphQLAuthMode.AMAZON_COGNITO_USER_POOLS,
-                          },
-                        },
-                      };
-
-                      export default amplifyConfig;
-                      EOF
-
-                    - npm ci
+                    - npm install
                 build:
                   commands:
                     - npm run build
               artifacts:
-                baseDirectory: dist
+                baseDirectory: build
                 files:
                   - '**/*'
               cache:
                 paths:
                   - node_modules/**/*
 
-  AmplifyBranch:
-    Type: AWS::Amplify::Branch
-    Properties:
-      AppId: !GetAtt AmplifyApp.AppId
-      BranchName: !Ref GitHubBranch
+Outputs:
+  AmplifyAppUrl:
+    Description: URL of the Amplify Application
+    Value: !GetAtt AmplifyApp.DefaultDomain
