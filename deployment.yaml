@@ -1,8 +1,3 @@
-deployments:
-  - name: AmplifyDeployment
-    template-file-path: cf_temp/amplify.yaml
-    parameters:
-      AppName: kobashi-sample-amplify
-      BranchName: main
-      GitHubRepo: https://github.com/kobashi-yoshizumi/amplify_sample
-    tags: {}
+template-file-path: cf_temp/amplify.yaml
+parameters: {}
+tags: {}
