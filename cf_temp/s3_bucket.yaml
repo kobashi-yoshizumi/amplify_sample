@@ -5,7 +5,7 @@ Parameters:
   BucketName:
     Type: String
     Description: The name of the S3 bucket
-    Default: my-default-s3-bucket
+    Default: kobashi-amplifyapp-s3-bucket
 
 Resources:
   MyS3Bucket:
