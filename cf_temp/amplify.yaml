@@ -24,16 +24,6 @@ Resources:
       Name: !Ref AppName
       Repository: !Ref GitHubRepo
       IAMServiceRole: !Sub "arn:aws:iam::${AWS::AccountId}:role/amplify-sample-role"  # ロールを指定
-      AccessToken: ""  # GitHubアプリを使う場合は不要
-      OAuthToken: ""   # GitHubアプリを使う場合は不要
-
-  AmplifyAppBranch:
-    Type: AWS::Amplify::Branch
-    Properties:
-      AppId: !Ref AmplifyApp
-      BranchName: !Ref BranchName
-      BasicAuthConfig:
-        EnableBasicAuth: false
       BuildSpec: |
         version: 1
         frontend:
@@ -51,6 +41,14 @@ Resources:
           cache:
             paths:
               - node_modules/**/*
+
+  AmplifyAppBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !Ref AmplifyApp
+      BranchName: !Ref BranchName
+      BasicAuthConfig:
+        EnableBasicAuth: false
 
 Outputs:
   AmplifyAppUrl:
