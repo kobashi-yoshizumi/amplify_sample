@@ -25,27 +25,31 @@ Resources:
       Repository: !Ref GitHubRepo
       OAuthToken: "{{resolve:secretsmanager:amplifyapp:SecretString:MyGitHubToken}}"
       AccessToken: "{{resolve:secretsmanager:amplifyapp:SecretString:MyGitHubAccessToken}}"
-      Branches:
-        - BranchName: !Ref BranchName
-          BasicAuthConfig:
-            EnableBasicAuth: false
-          BuildSpec: |
-            version: 1
-            frontend:
-              phases:
-                preBuild:
-                  commands:
-                    - npm install
-                build:
-                  commands:
-                    - npm run build
-              artifacts:
-                baseDirectory: build
-                files:
-                  - '**/*'
-              cache:
-                paths:
-                  - node_modules/**/*
+
+  AmplifyAppBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !Ref AmplifyApp
+      BranchName: !Ref BranchName
+      BasicAuthConfig:
+        EnableBasicAuth: false
+      BuildSpec: |
+        version: 1
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - npm install
+            build:
+              commands:
+                - npm run build
+          artifacts:
+            baseDirectory: build
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - node_modules/**/*
 
 Outputs:
   AmplifyAppUrl:
