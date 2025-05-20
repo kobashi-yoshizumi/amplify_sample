@@ -1,14 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: AppSync API Configuration with Cognito Authentication
+Description: AppSync API Only
 
 Parameters:
   CognitoUserPoolId:
     Type: String
-    Description: Existing Cognito User Pool ID
   AppSyncAPIName:
     Type: String
-    Default: NewAppSyncAPI
-    Description: Name of the AppSync API
+    Default: kobashi-sample-appsync
 
 Resources:
   AppSyncGraphQLAPI:
@@ -21,21 +19,8 @@ Resources:
         UserPoolId: !Ref CognitoUserPoolId
         DefaultAction: ALLOW
 
-  AppSyncGraphQLSchema:
-    Type: AWS::AppSync::GraphQLSchema
-    DependsOn: AppSyncGraphQLAPI
-    Properties:
-      ApiId: !Ref AppSyncGraphQLAPI
-      Definition: |
-        type Query {
-          hello: String
-        }
-
 Outputs:
   AppSyncApiId:
-    Description: The ID of the AppSync API
     Value: !Ref AppSyncGraphQLAPI
-
-  AppSyncApiEndpoint:
-    Description: The endpoint of the AppSync API
-    Value: !GetAtt AppSyncGraphQLAPI.GraphQLUrl
+    Export:
+      Name: AppSyncApiId-Kobashi
