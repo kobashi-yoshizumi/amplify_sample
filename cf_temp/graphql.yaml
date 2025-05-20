@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: GraphQL Schema for AppSync
+
+Parameters:
+  AppSyncApiId:
+    Type: String
+    Description: The API ID exported from AppSync API stack
+
+Resources:
+  AppSyncGraphQLSchema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId: !Ref AppSyncApiId
+      Definition: |
+        type Query {
+          hello: String
+        }
