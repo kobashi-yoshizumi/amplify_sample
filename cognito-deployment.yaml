@@ -1,0 +1,3 @@
+template-file-path: cf_temp/cognito.yaml
+parameters: {}
+tags: {}
