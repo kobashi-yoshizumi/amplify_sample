@@ -1,3 +1,7 @@
-template-file-path: cf_temp/appsync.yaml
-parameters: {}
-tags: {}
+deployments:
+  - name: AppSyncDeployment
+    template-file-path: cf_temp/appsync.yaml
+    parameters:
+      CognitoUserPoolId: ap-northeast-1_Vi94D4TfO  # ← ここにCognitoのUserPoolIdを入れる
+      AppSyncAPIName: kobashi-sample-appsync
+    tags: {}
