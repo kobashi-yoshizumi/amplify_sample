@@ -4,19 +4,19 @@ Description: Cognito User Pool and Identity Pool Configuration (No MFA) via GIT 
 Parameters:
   UserPoolName:
     Type: String
-    Default: kobashi_new_userpool_b2567a8b
+    Default: kobashi_amplify_userpool
 
   UserPoolClientName:
     Type: String
-    Default: kobashi_new_userpool_client
+    Default: kobashi_amplify_userpool_client
 
   DomainPrefix:
     Type: String
-    Default: kobashi-new-domain-b2567a8b
+    Default: kobashi-amplify-domain
 
   IdentityPoolName:
     Type: String
-    Default: kobashi_new_identitypool_b2567a8b
+    Default: kobashi_amplify_identitypool
 
 Resources:
   CognitoUserPool:
