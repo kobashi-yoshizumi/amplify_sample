@@ -1,4 +1,4 @@
 template-file-path: cf_temp/graphql.yaml
 parameters:
-  AppSyncApiId: Fn::ImportValue: AppSyncApiId-Kobashi
+  AppSyncApiId: yo45d7fyh5do3jy7nznjvml45u
 tags: {}
