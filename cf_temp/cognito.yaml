@@ -1,11 +1,28 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Cognito User Pool and Identity Pool Configuration (No MFA)
+Description: Cognito User Pool and Identity Pool Configuration (No MFA) via GIT Sync
+
+Parameters:
+  UserPoolName:
+    Type: String
+    Default: kobashi_new_userpool_b2567a8b
+
+  UserPoolClientName:
+    Type: String
+    Default: kobashi_new_userpool_client
+
+  DomainPrefix:
+    Type: String
+    Default: kobashi-new-domain-b2567a8b
+
+  IdentityPoolName:
+    Type: String
+    Default: kobashi_new_identitypool_b2567a8b
 
 Resources:
   CognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      UserPoolName: kobashi_new_userpool_b2567a8b
+      UserPoolName: !Ref UserPoolName
       UsernameAttributes:
         - email
       AutoVerifiedAttributes:
@@ -21,7 +38,7 @@ Resources:
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      ClientName: kobashi_new_userpool_client
+      ClientName: !Ref UserPoolClientName
       UserPoolId: !Ref CognitoUserPool
       GenerateSecret: false
       RefreshTokenValidity: 30
@@ -33,13 +50,13 @@ Resources:
   CognitoUserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain: kobashi-new-domain-b2567a8b
+      Domain: !Ref DomainPrefix
       UserPoolId: !Ref CognitoUserPool
 
   CognitoIdentityPool:
     Type: AWS::Cognito::IdentityPool
     Properties:
-      IdentityPoolName: kobashi_new_identitypool_b2567a8b
+      IdentityPoolName: !Ref IdentityPoolName
       AllowUnauthenticatedIdentities: true
       CognitoIdentityProviders:
         - ProviderName: !Sub cognito-idp.${AWS::Region}.amazonaws.com/${CognitoUserPool}
@@ -56,10 +73,6 @@ Resources:
             Principal:
               Federated: "cognito-identity.amazonaws.com"
             Action: "sts:AssumeRoleWithWebIdentity"
-            Condition:
-              StringEquals:
-                "cognito-identity.amazonaws.com:aud": !Ref CognitoIdentityPool
-                "cognito-identity.amazonaws.com:amr": "authenticated"
       Policies:
         - PolicyName: AuthPolicy
           PolicyDocument:
@@ -83,10 +96,6 @@ Resources:
             Principal:
               Federated: "cognito-identity.amazonaws.com"
             Action: "sts:AssumeRoleWithWebIdentity"
-            Condition:
-              StringEquals:
-                "cognito-identity.amazonaws.com:aud": !Ref CognitoIdentityPool
-                "cognito-identity.amazonaws.com:amr": "unauthenticated"
       Policies:
         - PolicyName: UnauthPolicy
           PolicyDocument:
@@ -110,24 +119,15 @@ Outputs:
   CognitoUserPoolId:
     Description: Cognito User Pool ID
     Value: !Ref CognitoUserPool
-    Export:
-      Name: CognitoUserPoolId-New
 
   CognitoUserPoolClientId:
     Description: Cognito User Pool Client ID
     Value: !Ref CognitoUserPoolClient
-    Export:
-      Name: CognitoUserPoolClientId-New
 
   CognitoIdentityPoolId:
     Description: Cognito Identity Pool ID
     Value: !Ref CognitoIdentityPool
-    Export:
-      Name: CognitoIdentityPoolId-New
 
   CognitoUserPoolDomain:
     Description: Cognito User Pool Domain
     Value: !Ref CognitoUserPoolDomain
-    Export:
-      Name: CognitoUserPoolDomain-New
-
