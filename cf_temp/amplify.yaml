@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Amplify Environment Creation via CloudFormation with Git Sync
+Description: Amplify Environment Creation via CloudFormation with GitHub App Authentication
 
 Parameters:
   AppName:
@@ -23,8 +23,9 @@ Resources:
     Properties:
       Name: !Ref AppName
       Repository: !Ref GitHubRepo
-      OAuthToken: "{{resolve:secretsmanager:amplifyapp:SecretString:MyGitHubToken}}"
-      AccessToken: "{{resolve:secretsmanager:amplifyapp:SecretString:MyGitHubAccessToken}}"
+      IAMServiceRole: !Sub "arn:aws:iam::${AWS::AccountId}:role/amplify-sample-role"  # ロールを指定
+      AccessToken: ""  # GitHubアプリを使う場合は不要
+      OAuthToken: ""   # GitHubアプリを使う場合は不要
 
   AmplifyAppBranch:
     Type: AWS::Amplify::Branch
