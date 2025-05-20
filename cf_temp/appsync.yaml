@@ -17,12 +17,13 @@ Resources:
       Name: !Ref AppSyncAPIName
       AuthenticationType: AMAZON_COGNITO_USER_POOLS
       UserPoolConfig:
-        AwsRegion: !Ref "AWS::Region"
+        AwsRegion: !Ref AWS::Region
         UserPoolId: !Ref CognitoUserPoolId
         DefaultAction: ALLOW
 
   AppSyncGraphQLSchema:
     Type: AWS::AppSync::GraphQLSchema
+    DependsOn: AppSyncGraphQLAPI
     Properties:
       ApiId: !Ref AppSyncGraphQLAPI
       Definition: |
