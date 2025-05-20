@@ -88,7 +88,7 @@ Resources:
   UnauthRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: kobashi_new_unauth_role
+      RoleName: kobashi_amplify_unauth_role
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
