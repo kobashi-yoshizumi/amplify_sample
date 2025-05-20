@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deploy multiple Lambda functions with IAM role via S3
+
+Parameters:
+  LambdaCodeBucket:
+    Type: String
+    Description: S3 bucket name where Lambda ZIPs are uploaded
+
+  FuncAKey:
+    Type: String
+    Description: S3 key for func_a.zip (e.g., lambda/func_a.zip)
+
+  FuncBKey:
+    Type: String
+    Description: S3 key for func_b.zip (e.g., lambda/func_b.zip)
+
+Resources:
+  # Lambda IAM Role
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: lambda-execution-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  # Lambda Function A
+  FuncA:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: func-a
+      Runtime: python3.11
+      Handler: lambda.func_a.app.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: !Ref FuncAKey
+
+  # Lambda Function A URL
+  FuncAUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      TargetFunctionArn: !Ref FuncA
+      AuthType: NONE  # 必要に応じてAWS_IAMに変更可能
+
+  # Lambda Function B
+  FuncB:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: func-b
+      Runtime: python3.11
+      Handler: lambda.func_b.handler.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: !Ref FuncBKey
+
+  # Lambda Function B URL
+  FuncBUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      TargetFunctionArn: !Ref FuncB
+      AuthType: NONE  # 必要に応じてAWS_IAMに変更可能
+
+Outputs:
+  FuncAUrlOutput:
+    Description: Lambda URL for Function A
+    Value: !Ref FuncAUrl
+
+  FuncBUrlOutput:
+    Description: Lambda URL for Function B
+    Value: !Ref FuncBUrl
