@@ -1,19 +1,25 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: AppSync API Configuration (New)
+Description: AppSync API Configuration with Cognito Authentication
+
+Parameters:
+  CognitoUserPoolId:
+    Type: String
+    Description: Existing Cognito User Pool ID
+  AppSyncAPIName:
+    Type: String
+    Default: NewAppSyncAPI
+    Description: Name of the AppSync API
 
 Resources:
   AppSyncGraphQLAPI:
     Type: AWS::AppSync::GraphQLApi
     Properties:
-      Name: NewAppSyncAPI
-      AuthenticationType: API_KEY
-
-  AppSyncAPIKey:
-    Type: AWS::AppSync::ApiKey
-    Properties:
-      ApiId: !Ref AppSyncGraphQLAPI
-      Description: "AppSync API Key"
-      Expires: 1893456000  # Unixタイムスタンプ (例: 2030-01-01)
+      Name: !Ref AppSyncAPIName
+      AuthenticationType: AMAZON_COGNITO_USER_POOLS
+      UserPoolConfig:
+        AwsRegion: !Ref "AWS::Region"
+        UserPoolId: !Ref CognitoUserPoolId
+        DefaultAction: ALLOW
 
   AppSyncGraphQLSchema:
     Type: AWS::AppSync::GraphQLSchema
@@ -28,18 +34,7 @@ Outputs:
   AppSyncApiId:
     Description: The ID of the AppSync API
     Value: !Ref AppSyncGraphQLAPI
-    Export:
-      Name: AppSyncApiId-New
 
   AppSyncApiEndpoint:
     Description: The endpoint of the AppSync API
     Value: !GetAtt AppSyncGraphQLAPI.GraphQLUrl
-    Export:
-      Name: AppSyncApiEndpoint-New
-
-  AppSyncApiKey:
-    Description: The API Key for the AppSync API
-    Value: !Ref AppSyncAPIKey
-    Export:
-      Name: AppSyncApiKey-New
-
