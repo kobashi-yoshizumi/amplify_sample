@@ -19,14 +19,12 @@ amplify_sample　　プロジェクトフォルダ
 appsyncを使ってDynamoからレコードの中身を取得し表示するサンプル
 
 
-GITHUB ACTIONSは使用禁止
-CODEPIPELINEは使用禁止
+GITHUB ACTIONSは使用しない
+CODEPIPELINEは使用しない（LAMBDAでは利用可能　ただし　CODE BUILDは使わない）
 EC2などを使ってAWSコマンドを手動で打ち込むのも禁止
 
 環境構築に関してはGIT同期のみで環境を構築。GITHUB上のブランチにソースがコミットされたら自動展開
 Amplifyのソースに関しては、Amlify publishの機能を利用してソースを展開する
-
-
 
 
 
