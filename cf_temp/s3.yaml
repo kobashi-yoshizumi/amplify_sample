@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: S3 Bucket Creation via CloudFormation with Custom Parameters
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: The name of the S3 bucket
+    Default: kobashi-amplifyapp-s3-bucket
+
+Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      AccessControl: Private
+      VersioningConfiguration:
+        Status: Enabled
