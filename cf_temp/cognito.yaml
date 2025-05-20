@@ -65,7 +65,7 @@ Resources:
   AuthRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: kobashi_new_auth_role
+      RoleName: kobashi_amplify_auth_role
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
