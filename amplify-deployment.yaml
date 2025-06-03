@@ -1,4 +1,4 @@
 template-file-path: cf_temp/amplify.yaml
 parameters:
-  GitHubPAT: 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
+  GitHubPAT: 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
 tags: {}
