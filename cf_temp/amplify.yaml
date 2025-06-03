@@ -28,7 +28,7 @@ Resources:
     Properties:
       Name: !Ref AppName
       Repository: !Ref GitHubRepo
-      OauthToken: !Ref GitHubPAT  # 👈 追加
+      OauthToken: !Ref GitHubPAT 
       BuildSpec: |
         version: 1
         frontend:
