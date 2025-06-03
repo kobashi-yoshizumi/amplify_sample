@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Amplify Environment Creation via CloudFormation with GitHub App Authentication
+Description: Amplify Environment Creation via CloudFormation with GitHub PAT Authentication
 
 Parameters:
   AppName:
@@ -17,13 +17,18 @@ Parameters:
     Description: The GitHub repository URL
     Default: https://github.com/kobashi-yoshizumi/amplify_sample
 
+  GitHubPAT:
+    Type: String
+    Description: GitHub Personal Access Token
+    NoEcho: true
+
 Resources:
   AmplifyApp:
     Type: AWS::Amplify::App
     Properties:
       Name: !Ref AppName
       Repository: !Ref GitHubRepo
-      IAMServiceRole: !Sub "arn:aws:iam::${AWS::AccountId}:role/amplify-sample-role"  # ロールを指定
+      OauthToken: !Ref GitHubPAT  # 👈 追加
       BuildSpec: |
         version: 1
         frontend:
