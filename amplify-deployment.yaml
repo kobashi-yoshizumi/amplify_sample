@@ -1,4 +1,7 @@
 template-file-path: cf_temp/amplify.yaml
 parameters:
-  GitHubPAT: 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
+  GitHubPAT: '****'
+  BranchName: main
+  GitHubRepo: https://github.com/kobashi-yoshizumi/amplify_sample
+  AppName: kobashi-sample-amplify
 tags: {}
