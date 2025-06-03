@@ -28,7 +28,7 @@ Resources:
     Properties:
       Name: !Ref AppName
       Repository: !Ref GitHubRepo
-      OauthToken: !Ref GitHubPAT 
+      OauthToken: !Ref GitHubPAT
       BuildSpec: |
         version: 1
         frontend:
@@ -46,14 +46,13 @@ Resources:
           cache:
             paths:
               - node_modules/**/*
-
+  
   AmplifyAppBranch:
     Type: AWS::Amplify::Branch
     Properties:
-      AppId: !Ref AmplifyApp
-      BranchName: !Ref BranchName
-      BasicAuthConfig:
-        EnableBasicAuth: false
+      AppId: !GetAtt AmplifyApp.AppId  # ✅ 修正箇所
+      BranchName: !Ref BranchName       # ✅ GIT同期する対象ブランチ
+      EnableAutoBuild: true             # ✅ GitHubと同期（Pushで自動Build）
 
 Outputs:
   AmplifyAppUrl:
